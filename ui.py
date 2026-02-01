@@ -242,7 +242,8 @@ def animate_move(stdscr, move_func, move_name: str, timer_state: dict = None,
                 draw_timer_display(stdscr, w, timer_state.get('timer_mode', False),
                                    timer_state.get('timer_running', False),
                                    timer_state.get('timer_start', 0),
-                                   timer_state.get('timer_result'))
+                                   timer_state.get('timer_result'),
+                                   timer_state.get('is_pb', False))
             draw_instructions(stdscr, h - 9)
             stdscr.refresh()
             time.sleep(0.03)
@@ -254,7 +255,8 @@ def animate_move(stdscr, move_func, move_name: str, timer_state: dict = None,
             draw_timer_display(stdscr, w, timer_state.get('timer_mode', False),
                                timer_state.get('timer_running', False),
                                timer_state.get('timer_start', 0),
-                               timer_state.get('timer_result'))
+                               timer_state.get('timer_result'),
+                               timer_state.get('is_pb', False))
         draw_instructions(stdscr, h - 9)
         stdscr.refresh()
         time.sleep(0.1)
@@ -266,7 +268,8 @@ def animate_move(stdscr, move_func, move_name: str, timer_state: dict = None,
         draw_timer_display(stdscr, w, timer_state.get('timer_mode', False),
                            timer_state.get('timer_running', False),
                            timer_state.get('timer_start', 0),
-                           timer_state.get('timer_result'))
+                           timer_state.get('timer_result'),
+                           timer_state.get('is_pb', False))
     draw_instructions(stdscr, h - 9)
     stdscr.refresh()
 
@@ -280,6 +283,7 @@ def redraw_screen(stdscr, cube_row: int, cube_col: int, timer_state: dict = None
         draw_timer_display(stdscr, w, timer_state.get('timer_mode', False),
                            timer_state.get('timer_running', False),
                            timer_state.get('timer_start', 0),
-                           timer_state.get('timer_result'))
+                           timer_state.get('timer_result'),
+                           timer_state.get('is_pb', False))
     draw_instructions(stdscr, h - 9)
     stdscr.refresh()

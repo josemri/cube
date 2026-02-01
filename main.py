@@ -32,11 +32,11 @@ def execute_singmaster_move(stdscr, move: str, timer_state: dict):
         base_move = move[:-1]
         if base_move in SINGMASTER_TO_MOVE:
             func, name = SINGMASTER_TO_MOVE[base_move]
-            animate_move(stdscr, func, name, timer_state=timer_state)
-            animate_move(stdscr, func, name, timer_state=timer_state)
+            animate_move(stdscr, func, name, timer_state=timer_state, singmaster_move=base_move)
+            animate_move(stdscr, func, name, timer_state=timer_state, singmaster_move=base_move)
     elif move in SINGMASTER_TO_MOVE:
         func, name = SINGMASTER_TO_MOVE[move]
-        animate_move(stdscr, func, name, timer_state=timer_state)
+        animate_move(stdscr, func, name, timer_state=timer_state, singmaster_move=move)
 
 
 def main(stdscr):
@@ -116,6 +116,7 @@ def main(stdscr):
                     timer_state['timer_result'] is None):
                     timer_state['timer_running'] = True
                     timer_state['timer_start'] = time.time()
+                    ble_state.current_solve_moves = []
                 
                 execute_singmaster_move(stdscr, translated_move, timer_state)
         except queue.Empty:
@@ -140,12 +141,15 @@ def main(stdscr):
                             timer_state['timer_mode'] = True
                             timer_state['timer_running'] = False
                             timer_state['timer_result'] = None
+                            timer_state['is_pb'] = False
                             ble_state.move_count = 0
+                            ble_state.current_solve_moves = []
                             redraw_screen(stdscr, cube_row, cube_col, timer_state)
                     else:
                         timer_state['timer_mode'] = False
                         timer_state['timer_running'] = False
                         timer_state['timer_result'] = None
+                        timer_state['is_pb'] = False
                         redraw_screen(stdscr, cube_row, cube_col, timer_state)
                     continue
                 
@@ -196,6 +200,7 @@ def main(stdscr):
                         timer_state['timer_result'] is None):
                         timer_state['timer_running'] = True
                         timer_state['timer_start'] = time.time()
+                        ble_state.current_solve_moves = []
                     
                     animate_move(stdscr, func, name, timer_state=timer_state)
         except curses.error:
