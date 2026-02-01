@@ -19,7 +19,7 @@ from moves import (
     translate_move_for_rotation, SINGMASTER_TO_MOVE
 )
 from animations import init_colors, load_animations, draw_sprite
-from ui import draw_timer_display, draw_instructions, animate_move, redraw_screen
+from ui import draw_timer_display, draw_instructions, animate_move, redraw_screen, draw_history_panel
 from bluetooth import start_ble_connection
 from shuffle import shuffle_cube, shuffle_cube_ble
 import ble_state
@@ -189,6 +189,15 @@ def main(stdscr):
                         ble_state.ble_connected = False
                         ble_state.ble_status_msg = "BLE: Reconnecting..."
                     start_ble_connection()
+                    continue
+                
+                # Show history panel (H)
+                if char in ['h', 'H']:
+                    draw_history_panel(stdscr)
+                    stdscr.nodelay(False)
+                    stdscr.getch()
+                    stdscr.nodelay(True)
+                    redraw_screen(stdscr, cube_row, cube_col, timer_state)
                     continue
                 
                 # Only process keyboard moves if BLE not connected

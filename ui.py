@@ -20,8 +20,7 @@ def format_time(seconds: float) -> str:
 
 
 def draw_status_bar(stdscr, width: int, row: int):
-    """Draw BLE status, stats, and sparkline"""
-    # Row 1: BLE status + move count + PB
+    """Draw BLE status and move count"""
     parts = []
     
     # BLE status
@@ -44,11 +43,6 @@ def draw_status_bar(stdscr, width: int, row: int):
     if ble_state.move_count > 0:
         parts.append((f"  Moves: {ble_state.move_count}", curses.A_DIM))
     
-    # Personal best (from history)
-    pb = get_best_time()
-    if pb is not None:
-        parts.append((f"  PB: {format_time(pb)}", curses.color_pair(7)))
-    
     # Calculate total width and center
     total_width = sum(len(p[0]) for p in parts)
     col = width // 2 - total_width // 2
@@ -59,31 +53,92 @@ def draw_status_bar(stdscr, width: int, row: int):
             col += len(text)
     except curses.error:
         pass
+
+
+def draw_history_panel(stdscr):
+    """Draw the history panel overlay"""
+    h, w = stdscr.getmaxyx()
     
-    # Row 2: Sparkline + stats
-    stats = get_statistics()
-    if stats["count"] > 0:
-        recent_times = get_recent_times(20)
-        sparkline = generate_sparkline(recent_times)
+    # Panel dimensions
+    panel_width = 50
+    panel_height = 16
+    start_row = h // 2 - panel_height // 2
+    start_col = w // 2 - panel_width // 2
+    
+    # Draw panel background/border
+    try:
+        # Top border
+        stdscr.addstr(start_row, start_col, "+" + "-" * (panel_width - 2) + "+", curses.A_BOLD)
         
-        stats_parts = []
-        stats_parts.append((f"[{sparkline}]", curses.A_DIM))
-        stats_parts.append((f"  Solves: {stats['count']}", curses.A_DIM))
+        # Title
+        title = " HISTORY "
+        title_col = start_col + (panel_width - len(title)) // 2
+        stdscr.addstr(start_row, title_col, title, curses.A_BOLD | curses.color_pair(7))
         
-        if "ao5" in stats:
-            stats_parts.append((f"  Ao5: {format_time(stats['ao5'])}", curses.color_pair(6)))
-        if "ao12" in stats:
-            stats_parts.append((f"  Ao12: {format_time(stats['ao12'])}", curses.color_pair(6)))
+        # Empty lines with borders
+        for i in range(1, panel_height - 1):
+            stdscr.addstr(start_row + i, start_col, "|" + " " * (panel_width - 2) + "|")
         
-        total_width = sum(len(p[0]) for p in stats_parts)
-        col = width // 2 - total_width // 2
+        # Bottom border
+        stdscr.addstr(start_row + panel_height - 1, start_col, "+" + "-" * (panel_width - 2) + "+", curses.A_BOLD)
         
-        try:
-            for text, attr in stats_parts:
-                stdscr.addstr(row + 1, col, text, attr)
-                col += len(text)
-        except curses.error:
-            pass
+        # Content
+        stats = get_statistics()
+        content_col = start_col + 3
+        row = start_row + 2
+        
+        if stats["count"] == 0:
+            stdscr.addstr(row + 4, start_col + panel_width // 2 - 8, "No solves yet!", curses.A_DIM)
+        else:
+            # Personal Best
+            pb = get_best_time()
+            if pb is not None:
+                stdscr.addstr(row, content_col, "Personal Best:", curses.A_BOLD)
+                stdscr.addstr(row, content_col + 16, format_time(pb), curses.color_pair(7) | curses.A_BOLD)
+            row += 2
+            
+            # Total solves
+            stdscr.addstr(row, content_col, f"Total Solves:   {stats['count']}")
+            row += 1
+            
+            # Average
+            stdscr.addstr(row, content_col, f"Average:        {format_time(stats['average'])}")
+            row += 1
+            
+            # Worst
+            stdscr.addstr(row, content_col, f"Worst:          {format_time(stats['worst'])}")
+            row += 2
+            
+            # Ao5
+            if "ao5" in stats:
+                stdscr.addstr(row, content_col, f"Ao5:            {format_time(stats['ao5'])}", curses.color_pair(6))
+            else:
+                stdscr.addstr(row, content_col, "Ao5:            (need 5 solves)", curses.A_DIM)
+            row += 1
+            
+            # Ao12
+            if "ao12" in stats:
+                stdscr.addstr(row, content_col, f"Ao12:           {format_time(stats['ao12'])}", curses.color_pair(6))
+            else:
+                stdscr.addstr(row, content_col, "Ao12:           (need 12 solves)", curses.A_DIM)
+            row += 2
+            
+            # Sparkline
+            recent_times = get_recent_times(30)
+            if recent_times:
+                sparkline = generate_sparkline(recent_times, width=30)
+                stdscr.addstr(row, content_col, "Last 30:", curses.A_DIM)
+                stdscr.addstr(row + 1, content_col, f"[{sparkline}]", curses.color_pair(6))
+        
+        # Footer
+        footer = "Press any key to close"
+        footer_col = start_col + (panel_width - len(footer)) // 2
+        stdscr.addstr(start_row + panel_height - 2, footer_col, footer, curses.A_DIM)
+        
+    except curses.error:
+        pass
+    
+    stdscr.refresh()
 
 
 def draw_timer_display(stdscr, width: int, timer_mode: bool, timer_running: bool, 
@@ -143,7 +198,7 @@ def draw_instructions(stdscr, start_row: int):
             ("Arrow Keys    Rotate cube view", 0),
             ("X             Shuffle cube", 0),
             ("Space         Toggle timer", 0),
-            ("C             Reset cube", 0),
+            ("H             History", 0),
             ("Esc           Quit", 0),
         ]
     else:
@@ -154,7 +209,7 @@ def draw_instructions(stdscr, start_row: int):
             ("Cols  Q/A Left  W/S Mid   E/D Right", 0),
             ("Face  R/F Front T/G Mid   Y/H Back", 0),
             ("", 0),
-            ("X=Shuffle  Space=Timer  C=Reset  B=Connect  Esc=Quit", curses.A_DIM),
+            ("X=Shuffle  Space=Timer  H=History  B=BLE  Esc=Quit", curses.A_DIM),
         ]
     
     for i, (line, attr) in enumerate(lines):
