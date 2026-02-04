@@ -24,18 +24,6 @@ pip install bleak  # Bluetooth dependency
 python3 main.py
 ```
 
-### controls
-
-| Key | Action |
-|-----|--------|
-| `Arrow Keys` | Rotate cube view |
-| `Space` | Toggle timer mode |
-| `X` | Shuffle cube |
-| `H` | Show history/stats |
-| `B` | Reconnect Bluetooth |
-| `C` | Reset cube |
-| `Esc` | Quit |
-
 ## project structure
 
 ```
@@ -54,10 +42,8 @@ cube/
 
 ## credits
 
-This project uses code and ideas from:
-
-- [hakatashi/giiker](https://github.com/hakatashi/giiker) - GiiKER Bluetooth protocol documentation and parsing logic
-- [Icaro-Lima/ASCII-Rubiks-Cube-Simulator](https://github.com/Icaro-Lima/ASCII-Rubiks-Cube-Simulator) - ASCII cube rendering, animation system, and keyboard control mapping
+[hakatashi/giiker](https://github.com/hakatashi/giiker) - GiiKER Bluetooth protocol documentation and parsing logic
+[Icaro-Lima/ASCII-Rubiks-Cube-Simulator](https://github.com/Icaro-Lima/ASCII-Rubiks-Cube-Simulator) - ASCII cube rendering, animation system, and keyboard control mapping
 
 ## license
 
