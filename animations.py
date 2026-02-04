@@ -35,7 +35,7 @@ def init_colors():
 
 def load_animations():
     """Load all sprite animations from Assets folder"""
-    assets_path = Path("Assets")
+    assets_path = Path("assets")
     
     # Load default sprite
     default_file = assets_path / "Default.txt"
