@@ -1,7 +1,5 @@
 <img src="logo.gif" width="192" align="left" style="margin-right:16px;"/>
 
-# **ASCII Rubik's Cube with GiiKER Smart Cube support**
-
 A terminal-based Rubik's Cube simulator that connects to GiiKER smart cubes via Bluetooth. Tracks your solves, shows animated moves in ASCII art, and keeps a history of your times with statistics.
 
 ## demo
