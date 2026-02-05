@@ -1,3 +1,5 @@
+<img src="logo.gif" width="192" align="left" style="margin-right:16px;"/>
+
 # cube
 
 **ASCII Rubik's Cube with GiiKER Smart Cube support**
