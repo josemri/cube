@@ -1,11 +1,6 @@
 <img src="logo.gif" width="192" align="left" style="margin-right:16px;"/>
 
-# cube
-
-**ASCII Rubik's Cube with GiiKER Smart Cube support**
-
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org)
+# **ASCII Rubik's Cube with GiiKER Smart Cube support**
 
 A terminal-based Rubik's Cube simulator that connects to GiiKER smart cubes via Bluetooth. Tracks your solves, shows animated moves in ASCII art, and keeps a history of your times with statistics.
 
