@@ -1,6 +1,10 @@
-<img src="logo.gif" width="192" align="left" style="margin-right:16px;"/>
+<h1 style="border: none;">GiiKER Cube</h1>
+
+<img src="logo.gif" width="192" align="left" style="margin-right:32px;margin-bottom:20px;"/>
 
 A terminal-based Rubik's Cube simulator that connects to GiiKER smart cubes via Bluetooth. Tracks your solves, shows animated moves in ASCII art, and keeps a history of your times with statistics.
+
+<div style="clear: both;"></div>
 
 ## demo
 
